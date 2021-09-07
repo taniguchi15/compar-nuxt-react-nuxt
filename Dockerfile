@@ -1,9 +1,12 @@
 FROM node:14.17
 
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
 RUN apt-get update
 
 WORKDIR /app
-ADD ./package.json /app
+ADD ./package.json ./
 RUN yarn install
 
 ENV HOST 0.0.0.0

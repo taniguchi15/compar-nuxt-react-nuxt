@@ -3,7 +3,8 @@
     <h1>Nuxt.js VS React.js</h1>
     <p class="compar">実装比較</p>
     <p class="detail" v-if="detail">{{detail}}</p>
-    <p class="about" v-if="url">About: <a :href="url">{{url}}</a></p>
+    <p class="link" v-if="url">About: <a :href="url">{{url}}</a></p>
+    <p class="link" v-if="viewReactTop"><a href="/react">React.jsのTop</a></p>
     <h2>Nuxt.js</h2>
   </div>
 </template>
@@ -19,6 +20,10 @@ export default Vue.extend({
     url: {
       type: String,
       default: null
+    },
+    viewReactTop: {
+      type: Boolean,
+      default: false
     }
   }
 })
@@ -32,7 +37,6 @@ export default Vue.extend({
     a
       color: #d08080
     h1, h2, p
-      color: #555
       text-align: center
     h1
       margin: 20px 0 5px
@@ -49,7 +53,8 @@ export default Vue.extend({
       width: 4em
       padding: 3px
       border-radius: 10px
-    p.about
+    p.link
+      margin: 8px
       font-size: 0.8em
     h2
       margin: 40px auto 20px

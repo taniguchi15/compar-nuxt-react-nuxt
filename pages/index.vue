@@ -6,85 +6,85 @@
     />
     <InputText 
       :label="'名前'"
-      :value="name"
-      :changeValue="s => name = s"
+      :keyName="'name'"
+      :value="inputs.name"
+      :onChange="onChange"
       :required="true"
       :viewValidationResult="viewValidationResult"
-      :isValid="valid => isValidName = valid"
     />
     <InputText
       :label="'名前(カナ)'"
-      :value="nameKana"
-      :changeValue="s => nameKana = s"
+      :keyName="'nameKana'"
+      :value="inputs.nameKana"
+      :onChange="onChange"
       :required="true"
       :regex="/^[ァ-ヶー　]+$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidNameKana = result"
     />
     <InputText
       :label="'E-Mail'"
-      :value="email"
-      :changeValue="s => email = s"
+      :keyName="'email'"
+      :value="inputs.email"
+      :onChange="onChange"
       :required="true"
       :regex="/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidEmail = result"
     />
     <InputText
       :label="'年齢'"
-      :value="age"
-      :changeValue="s => age = s"
+      :keyName="'age'"
+      :value="inputs.age"
+      :onChange="onChange"
       :regex="/^\d{1,3}$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidAge = result"
     />
     <InputText
       :label="'郵便番号'"
-      :value="zipCode"
-      :changeValue="s => zipCode = s"
+      :keyName="'zipCode'"
+      :value="inputs.zipCode"
+      :onChange="onChange"
       :required="true"
       :regex="/^\d{7}$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidZipCode = result"
     />
     <InputText
       :label="'住所'"
-      :value="address"
-      :changeValue="s => address = s"
+      :keyName="'address'"
+      :value="inputs.address"
+      :onChange="onChange"
       :required="true"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidAddress = result"
     />
     <InputText
       :label="'電話番号'"
-      :value="tel"
-      :changeValue="s => tel = s"
+      :keyName="'tel'"
+      :value="inputs.tel"
+      :onChange="onChange"
       :regex="/^\d{10}$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidTel = result"
     />
     <InputText
       :label="'携帯電話番号'"
-      :value="mobileNumber"
-      :changeValue="s => mobileNumber = s"
+      :keyName="'mobileNumber'"
+      :value="inputs.mobileNumber"
+      :onChange="onChange"
       :regex="/^\d{11}$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidMobileNumber = result"
     />
     <InputText
       :label="'趣味・特技'"
-      :value="hobby"
-      :changeValue="s => hobby = s"
+      :keyName="'hobby'"
+      :value="inputs.hobby"
+      :onChange="onChange"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidHobby = result"
     />
     <InputText
       :label="'勤務先電話番号'"
-      :value="workTel"
-      :changeValue="s => workTel = s"
+      :keyName="'workTel'"
+      :value="inputs.workTel"
+      :onChange="onChange"
       :regex="/^\d{10,11}$/"
       :viewValidationResult="viewValidationResult"
-      :isValid="result => isValidWorkTel = result"
     />
     <div class="errors" v-if="viewValidationResult">
       <p v-if="!isValidTelOrMobile">電話番号、もしくは携帯電話番号のいずれか１つは入力が必要です。</p>
@@ -106,51 +106,56 @@ export default Vue.extend({
   },
   data() {
     return {
-      name: '',
-      nameKana: '',
-      email: '',
-      age: '',
-      zipCode: '',
-      address: '',
-      tel: '',
-      mobileNumber: '',
-      hobby: '',
-      workTel: '',
+      inputs: {
+        name: '',
+        nameKana: '',
+        email: '',
+        age: '',
+        zipCode: '',
+        address: '',
+        tel: '',
+        mobileNumber: '',
+        hobby: '',
+        workTel: '',
+      },
+      valids: {
+        name: false,
+        nameKana: false,
+        email: false,
+        age: false,
+        zipCode: false,
+        address: false,
+        tel: false,
+        mobileNumber: false,
+        hobby: false,
+        workTel: false,
+      },
       viewValidationResult: false,
-      isValidName: false,
-      isValidNameKana: false,
-      isValidEmail: false,
-      isValidAge: false,
-      isValidZipCode: false,
-      isValidAddress: false,
-      isValidTel: false,
-      isValidMobileNumber: false,
-      isValidHobby: false,
-      isValidWorkTel: false
     }
   },
   computed: {
       isValidTelOrMobile(): boolean {
-        return !!this.tel || !!this.mobileNumber
+        return !!this.inputs.tel || !!this.inputs.mobileNumber
       },
       isValidNoMobile(): boolean {
-        return !!this.mobileNumber || !!this.workTel
+        return !!this.inputs.mobileNumber || !!this.inputs.workTel
       }
   },
   methods: {
+    onChange(key: string, value: string, isValid: boolean) {
+      this.inputs = {
+        ...this.inputs,
+        [key]: value
+      }
+      this.valids = {
+        ...this.valids,
+        [key]: isValid
+      }
+    },
     send() {
       this.viewValidationResult = true
 
-      const valid = this.isValidName &&
-        this.isValidNameKana &&
-        this.isValidEmail &&
-        this.isValidAge &&
-        this.isValidZipCode &&
-        this.isValidAddress &&
-        this.isValidTel &&
-        this.isValidMobileNumber &&
-        this.isValidHobby &&
-        this.isValidWorkTel &&
+      const valid = Object.values(this.valids).every(bool => bool) &&
         this.isValidTelOrMobile &&
         this.isValidNoMobile
 
@@ -162,18 +167,11 @@ export default Vue.extend({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: this.name,
-          nameKana: this.nameKana,
-          email: this.email,
-          age: Number(this.age),
-          zipCode: Number(this.zipCode),
-          address: this.address,
-          tel: this.tel,
-          mobileNumber: this.mobileNumber,
-          hobby: this.hobby,
-          workTel: this.workTel,
+          ...this.inputs,
+          age: Number(this.inputs.age),
+          zipCode: Number(this.inputs.zipCode),
         })
-      }).then((val: Response) => {
+      }).then(() => {
         alert('succsess')
         this.viewValidationResult = false
       })

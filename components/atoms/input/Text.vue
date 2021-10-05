@@ -17,12 +17,16 @@ export default Vue.extend({
       type: String,
       required: true
     },
+    keyName: {
+      type: String,
+      required: true
+    },
     value: {
       type: String,
       required: true
     },
-    changeValue: {
-      type: Function as PropType<(s :string) => void>,
+    onChange: {
+      type: Function as PropType<(key :string, value: string, isValid: boolean) => void>,
       default: (val: string) => null
     },
     required: {
@@ -36,14 +40,10 @@ export default Vue.extend({
     viewValidationResult: {
       type: Boolean,
       default: false
-    },
-    isValid: {
-      type: Function as PropType<(b :boolean) => void>,
-      default: (valid: boolean) => null
     }
   },
   data() {
-    if (!this.required) this.isValid(true)
+    if (!this.required) this.onChange(this.keyName, this.value, true)
     return {
       val: this.value,
       valid: !this.required
@@ -51,15 +51,14 @@ export default Vue.extend({
   },
   watch: {
     val(val: string) {
-      this.changeValue(val)
       let valid = true
       if (val) {
-        valid = this.regex ? this.regex?.test(val) : true
+        valid = this.regex ? this.regex.test(val) : true
       } else if (this.required) {
         valid = false
       }
-      this.isValid(valid)
       this.valid = valid 
+      this.onChange(this.keyName, val, valid)
     }
   }
 })

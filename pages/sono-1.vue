@@ -161,6 +161,7 @@ export default Vue.extend({
 
       if (!valid) return
 
+      /*
       fetch("/api/v1/user", {
         method: 'POST',
         headers: {
@@ -175,6 +176,17 @@ export default Vue.extend({
         alert('succsess')
         this.viewValidationResult = false
       })
+      */
+
+      this.$axios.$post('/user', {
+        ...this.inputs,
+        age: Number(this.inputs.age),
+        zipCode: Number(this.inputs.zipCode),
+      }).then(() => {
+        alert('succsess')
+        this.viewValidationResult = false
+      })
+
     }
   }
 })

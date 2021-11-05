@@ -11,7 +11,7 @@
       <li><NuxtLink to="/sono-2">その２ Page Pathの設定① - 普通のページ遷移</NuxtLink></li>
       <li><NuxtLink to="/sono-2-2">その２ Page Pathの設定② - Not Found Page</NuxtLink></li>
       <li><NuxtLink to="/sono-3">その３ APIアクセス共通エラー画面遷移処理</NuxtLink></li>
-      <li>その４ 画面種別共通処理</li>
+      <li><NuxtLink to="/sono-4">その４ 画面種別共通処理</NuxtLink></li>
     </ul>
   </div>
 </template>
